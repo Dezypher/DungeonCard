@@ -7,22 +7,30 @@ public class Movement : MonoBehaviour {
 	public float currRotation;
 	public float moveSpeed;
 	public float rotationSpeed;
-	public int orientation; //0 - Forward 1 - Right 2 - Backward 3 - Left
 	public float timeInterval;
 
-	public float tick = 0;
-
 	public GameObject cameraPivot;
-
 	public int direction = 0;
-	public bool canPress = true;
-	public Vector3 destination;
+
+	private PlayerHandler playerHandler;
+	private float tick = 0;
+	private bool canPress = true;
+	private Vector3 destination;
 
 	void Start () {
-		destination = transform.position;
+		playerHandler = GameObject.Find ("PlayerHandler")
+			.GetComponent<PlayerHandler>();
+		destination = new Vector3 (playerHandler.player.x * scale,
+									transform.position.y,
+									playerHandler.player.y * scale);
 	}
 
 	void Update () {
+		destination = new Vector3 (playerHandler.player.x * scale,
+			transform.position.y,
+			playerHandler.player.y * scale);
+
+
 		if (destination.x > transform.position.x) {
 			transform.Translate (Vector3.right * Time.deltaTime * moveSpeed);
 			if (destination.x < transform.position.x)
@@ -42,47 +50,46 @@ public class Movement : MonoBehaviour {
 		}
 
 		if (Input.GetAxis ("Vertical") > 0 && canPress) {
-			canPress = false;
+			bool moved = false;
 
-			float x = transform.position.x;
-			float y = transform.position.y;
-			float z = transform.position.z;
-
-			switch (orientation) {
+			switch (playerHandler.player.orientation) {
 			case 0:
-				destination = new Vector3(x, y, z + scale);
+				moved = playerHandler.MovePlayer (0, 1);
 				break;
 			case 1:
-				destination = new Vector3(x + scale, y, z);
+				moved = playerHandler.MovePlayer (1, 0);
 				break;
 			case 2:
-				destination = new Vector3(x, y, z - scale);
+				moved = playerHandler.MovePlayer (0, -1);
 				break;
 			case 3:
-				destination = new Vector3(x - scale, y, z);
+				moved = playerHandler.MovePlayer (-1, 0);
 				break;
 			}
+
+			if(moved)
+				canPress = false;
+
 		} else if (Input.GetAxis ("Vertical") < 0 && canPress) {
-			canPress = false;
+			bool moved = false;
 
-			float x = transform.position.x;
-			float y = transform.position.y;
-			float z = transform.position.z;
-
-			switch (orientation) {
+			switch (playerHandler.player.orientation) {
 			case 0:
-				destination = new Vector3(x, y, z - scale);
+				moved = playerHandler.MovePlayer (0, -1);
 				break;
 			case 1:
-				destination = new Vector3(x - scale, y, z);
+				moved = playerHandler.MovePlayer (-1, 0);
 				break;
 			case 2:
-				destination = new Vector3(x, y, z + scale);
+				moved = playerHandler.MovePlayer (0, 1);
 				break;
 			case 3:
-				destination = new Vector3(x + scale, y, z);
+				moved = playerHandler.MovePlayer (1, 0);
 				break;
 			}
+
+			if(moved)
+				canPress = false;
 		}
 
 		if (Input.GetAxis ("Horizontal") > 0 && canPress) {
@@ -90,24 +97,24 @@ public class Movement : MonoBehaviour {
 
 			direction = 1;
 
-			if (orientation < 3) {
+			if (playerHandler.player.orientation < 3) {
 				currRotation += 90;
-				orientation++;
+				playerHandler.player.orientation++;
 			} else {
 				currRotation = 0;
-				orientation = 0;
+				playerHandler.player.orientation = 0;
 			}
 		} else if (Input.GetAxis ("Horizontal") < 0 && canPress) {
 			canPress = false;
 
 			direction = -1;
 
-			if (orientation > 0) {
+			if (playerHandler.player.orientation > 0) {
 				currRotation -= 90;
-				orientation--;
+				playerHandler.player.orientation--;
 			} else {
 				currRotation = 270;
-				orientation = 3;
+				playerHandler.player.orientation = 3;
 			}
 		}
 
