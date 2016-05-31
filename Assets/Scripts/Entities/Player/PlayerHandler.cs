@@ -9,6 +9,8 @@ public class PlayerHandler : MonoBehaviour {
 	void Start () {
 		mapHandler = GameObject.Find ("MapHandler")
 			.GetComponent<MapHandler>();
+		GameObject.Find ("ActorList")
+			.GetComponent<ActorList> ().actorList[0] = player;
 	}
 
 	//Bounded Player Movement
@@ -27,25 +29,5 @@ public class PlayerHandler : MonoBehaviour {
 		}
 
 		return false;
-	}
-}
-
-[System.Serializable]
-public class Player{
-	public int x;
-	public int y;
-	public int hitPoints;
-	public int orientation; //0 - Forward 1 - Right 2 - Backward 3 - Left
-
-	public Player(int x, int y){
-		this.x = x;
-		this.y = y;
-		orientation = 0;
-	}
-
-	public Player(){
-		x = 0;
-		y = 0;
-		orientation = 0;
 	}
 }

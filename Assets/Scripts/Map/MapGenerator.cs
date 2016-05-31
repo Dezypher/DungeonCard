@@ -21,6 +21,7 @@ public class MapGenerator : MonoBehaviour {
 		playerObject = GameObject.Find ("PlayerObject");
 		player = GameObject.Find ("PlayerHandler")
 			.GetComponent<PlayerHandler>().player;
+		player.name = "Player";
 	}
 
 	public void Generate(Map map){

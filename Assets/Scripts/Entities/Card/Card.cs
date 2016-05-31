@@ -10,8 +10,9 @@ public class Card {
 	public static int CARDTYPE_SKILL = 2;
 
 	public string name;
+	public string description;
 	public CardType type;
-	public CardEffect[] effects;
+	public Effect[] effects;
 
 	public string GetName(){
 		return name;
@@ -23,17 +24,20 @@ public class Card {
 }
 
 [System.Serializable]
-public class CardEffect {
-	public enum CardEffectType{};
-	public static int CARDEFFECT_CHANGEHP = 0;
-	public static int CARDEFFECT_CHANGESTAT = 1;
+public class Effect {
+	public enum EffectType{ChangeHP, ChangeStat};
+	public static int EFFECT_CHANGEHP = 0;
+	public static int EFFECT_CHANGESTAT = 1;
 
-	public CardEffectType effectType;
+	public EffectType effectType;
 	public int recepientID; //0 is none, 1 is Player
 	public int[] values;
 	public int animationID;
 }
 
-public class CardHandler {
+public class EffectHandler {		
 
+	public void DoEffect(int effectType, int recepientID){
+
+	}
 }
